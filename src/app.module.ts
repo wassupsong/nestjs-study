@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
-import { MoviesModule } from './movies/movies.module';
-import { AppController } from './app.controller';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { BoardsModule } from "./boards/boards.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeORMConfig } from "./configs/typeorm.config";
 
 @Module({
-  imports: [MoviesModule],
+  imports: [TypeOrmModule.forRoot(TypeORMConfig), BoardsModule],
   controllers: [AppController],
   providers: [],
 })

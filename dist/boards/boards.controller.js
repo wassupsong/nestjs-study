@@ -8,27 +8,75 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardsController = void 0;
 const common_1 = require("@nestjs/common");
 const boards_service_1 = require("./boards.service");
+const board_status_enum_1 = require("./board-status-enum");
+const create_board_dto_1 = require("./dto/create-board.dto");
+const board_status_validation_pipe_1 = require("./pipes/board-status-validation.pipe");
 let BoardsController = class BoardsController {
     constructor(boardsService) {
         this.boardsService = boardsService;
     }
-    getAllBoards() {
-        return this.boardsService.getAllBoards();
+    async getAllBoard() {
+        return this.boardsService.getAllBoard();
+    }
+    async getBoardById(id) {
+        return this.boardsService.getBoardById(id);
+    }
+    async createBoard(createBoardDto) {
+        return this.boardsService.createBoard(createBoardDto);
+    }
+    async deleteBoard(id) {
+        return this.boardsService.deleteBoard(id);
+    }
+    async updateBoardStatus(id, status) {
+        return this.boardsService.updateBoardStatus(id, status);
     }
 };
 exports.BoardsController = BoardsController;
 __decorate([
-    (0, common_1.Get)("/"),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], BoardsController.prototype, "getAllBoards", null);
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "getAllBoard", null);
+__decorate([
+    (0, common_1.Get)("/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "getBoardById", null);
+__decorate([
+    (0, common_1.Post)(),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "createBoard", null);
+__decorate([
+    (0, common_1.Delete)("/:id"),
+    __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "deleteBoard", null);
+__decorate([
+    (0, common_1.Patch)("/:id/status"),
+    __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)("status", board_status_validation_pipe_1.BoardStatusValidationPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "updateBoardStatus", null);
 exports.BoardsController = BoardsController = __decorate([
-    (0, common_1.Controller)('boards'),
+    (0, common_1.Controller)("boards"),
     __metadata("design:paramtypes", [boards_service_1.BoardsService])
 ], BoardsController);
 //# sourceMappingURL=boards.controller.js.map

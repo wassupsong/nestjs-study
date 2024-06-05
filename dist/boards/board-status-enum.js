@@ -6,4 +6,4 @@ var BoardStatusModel;
     BoardStatusModel["PUBLIC"] = "PUBLIC";
     BoardStatusModel["PRIVATE"] = "PRIVATE";
 })(BoardStatusModel || (exports.BoardStatusModel = BoardStatusModel = {}));
-//# sourceMappingURL=board.model.js.map
+//# sourceMappingURL=board-status-enum.js.map

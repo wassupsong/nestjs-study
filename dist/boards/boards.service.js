@@ -8,20 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardsService = void 0;
 const common_1 = require("@nestjs/common");
-const board_model_1 = require("./board.model");
+const board_entity_1 = require("./board.entity");
 let BoardsService = class BoardsService {
-    constructor() {
-        this.boards = [];
+    async getAllBoard() {
+        return await board_entity_1.Board.getAllBoard();
     }
-    getAllBoards() {
-        return this.boards;
+    async getBoardById(id) {
+        const found = await board_entity_1.Board.getBoardById(id);
+        if (!found) {
+            throw new common_1.NotFoundException(`Cant' find board with id ${id}`);
+        }
+        return found;
     }
-    createBoard(title, description) {
-        const board = {
-            title,
-            description,
-            status: board_model_1.BoardStatusModel.PUBLIC
-        };
+    async createBoard(createBoardDto) {
+        return await board_entity_1.Board.createBoard(createBoardDto);
+    }
+    async deleteBoard(id) {
+        return await board_entity_1.Board.deleteBoard(id);
+    }
+    async updateBoardStatus(id, status) {
+        return await board_entity_1.Board.updateBoardStatus(id, status);
     }
 };
 exports.BoardsService = BoardsService;

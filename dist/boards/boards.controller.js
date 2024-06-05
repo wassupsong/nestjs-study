@@ -24,8 +24,10 @@ const auth_entity_1 = require("../auth/auth.entity");
 let BoardsController = class BoardsController {
     constructor(boardsService) {
         this.boardsService = boardsService;
+        this.logger = new common_1.Logger("BoardsController");
     }
     async getAllBoard(user) {
+        this.logger.verbose(`User ${user.username} trying to get all boards`);
         return this.boardsService.getAllBoard(user);
     }
     async getBoardById(id) {

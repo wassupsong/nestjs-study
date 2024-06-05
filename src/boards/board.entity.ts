@@ -29,7 +29,7 @@ export class Board extends BaseEntity {
 
   static async getAllBoard(user: User): Promise<Board[]> {
     const query = this.createQueryBuilder("board");
-    query.where("board.userId = userId", { userId: user.id });
+    query.where("board.userId = :userId", { userId: user.id });
 
     return await query.getMany();
   }

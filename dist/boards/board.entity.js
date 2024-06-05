@@ -17,7 +17,7 @@ const auth_entity_1 = require("../auth/auth.entity");
 let Board = class Board extends typeorm_1.BaseEntity {
     static async getAllBoard(user) {
         const query = this.createQueryBuilder("board");
-        query.where("board.userId = userId", { userId: user.id });
+        query.where("board.userId = :userId", { userId: user.id });
         return await query.getMany();
     }
     static async getBoardById(id) {

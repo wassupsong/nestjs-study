@@ -2,11 +2,12 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Board } from "./board.entity";
 import { CreateBoardDto } from "./dto/create-board.dto";
 import { BoardStatusModel } from "./board-status-enum";
+import { User } from "src/auth/auth.entity";
 
 @Injectable()
 export class BoardsService {
-  async getAllBoard(): Promise<Board[]> {
-    return await Board.getAllBoard();
+  async getAllBoard(user: User): Promise<Board[]> {
+    return await Board.getAllBoard(user);
   }
 
   async getBoardById(id: number): Promise<Board> {
@@ -17,12 +18,15 @@ export class BoardsService {
     return found;
   }
 
-  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    return await Board.createBoard(createBoardDto);
+  async createBoard(
+    createBoardDto: CreateBoardDto,
+    user: User,
+  ): Promise<Board> {
+    return await Board.createBoard(createBoardDto, user);
   }
 
-  async deleteBoard(id: number): Promise<void> {
-    return await Board.deleteBoard(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    return await Board.deleteBoard(id, user);
   }
 
   async updateBoardStatus(

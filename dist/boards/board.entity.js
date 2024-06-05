@@ -13,25 +13,29 @@ exports.Board = void 0;
 const typeorm_1 = require("typeorm");
 const board_status_enum_1 = require("./board-status-enum");
 const common_1 = require("@nestjs/common");
+const auth_entity_1 = require("../auth/auth.entity");
 let Board = class Board extends typeorm_1.BaseEntity {
-    static async getAllBoard() {
-        return this.find();
+    static async getAllBoard(user) {
+        const query = this.createQueryBuilder("board");
+        query.where("board.userId = userId", { userId: user.id });
+        return await query.getMany();
     }
     static async getBoardById(id) {
         return this.findOne({
             where: { id },
         });
     }
-    static async createBoard(createBoardDto) {
+    static async createBoard(createBoardDto, user) {
         const board = this.create({
             ...createBoardDto,
             status: board_status_enum_1.BoardStatusModel.PUBLIC,
+            user,
         });
         await this.save(board);
         return board;
     }
-    static async deleteBoard(id) {
-        const result = await this.delete({ id });
+    static async deleteBoard(id, user) {
+        const result = await this.delete({ id, user });
         if (result.affected === 0) {
             throw new common_1.NotFoundException(`Can't find board with id: ${id}`);
         }
@@ -59,6 +63,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Board.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)((type) => auth_entity_1.User, (user) => user.boards, { eager: false }),
+    __metadata("design:type", auth_entity_1.User)
+], Board.prototype, "user", void 0);
 exports.Board = Board = __decorate([
     (0, typeorm_1.Entity)()
 ], Board);

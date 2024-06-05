@@ -10,8 +10,8 @@ exports.BoardsService = void 0;
 const common_1 = require("@nestjs/common");
 const board_entity_1 = require("./board.entity");
 let BoardsService = class BoardsService {
-    async getAllBoard() {
-        return await board_entity_1.Board.getAllBoard();
+    async getAllBoard(user) {
+        return await board_entity_1.Board.getAllBoard(user);
     }
     async getBoardById(id) {
         const found = await board_entity_1.Board.getBoardById(id);
@@ -20,11 +20,11 @@ let BoardsService = class BoardsService {
         }
         return found;
     }
-    async createBoard(createBoardDto) {
-        return await board_entity_1.Board.createBoard(createBoardDto);
+    async createBoard(createBoardDto, user) {
+        return await board_entity_1.Board.createBoard(createBoardDto, user);
     }
-    async deleteBoard(id) {
-        return await board_entity_1.Board.deleteBoard(id);
+    async deleteBoard(id, user) {
+        return await board_entity_1.Board.deleteBoard(id, user);
     }
     async updateBoardStatus(id, status) {
         return await board_entity_1.Board.updateBoardStatus(id, status);

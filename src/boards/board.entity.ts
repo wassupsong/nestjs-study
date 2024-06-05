@@ -1,7 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { BoardStatusModel } from "./board-status-enum";
 import { CreateBoardDto } from "./dto/create-board.dto";
 import { NotFoundException } from "@nestjs/common";
+import { User } from "src/auth/auth.entity";
 
 @Entity()
 export class Board extends BaseEntity {
@@ -17,8 +24,14 @@ export class Board extends BaseEntity {
   @Column()
   status: BoardStatusModel;
 
-  static async getAllBoard(): Promise<Board[]> {
-    return this.find();
+  @ManyToOne((type) => User, (user) => user.boards, { eager: false })
+  user: User;
+
+  static async getAllBoard(user: User): Promise<Board[]> {
+    const query = this.createQueryBuilder("board");
+    query.where("board.userId = userId", { userId: user.id });
+
+    return await query.getMany();
   }
 
   static async getBoardById(id: number): Promise<Board> {
@@ -27,17 +40,21 @@ export class Board extends BaseEntity {
     });
   }
 
-  static async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+  static async createBoard(
+    createBoardDto: CreateBoardDto,
+    user: User,
+  ): Promise<Board> {
     const board = this.create({
       ...createBoardDto,
       status: BoardStatusModel.PUBLIC,
+      user,
     });
     await this.save(board);
     return board;
   }
 
-  static async deleteBoard(id: number): Promise<void> {
-    const result = await this.delete({ id });
+  static async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.delete({ id, user });
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find board with id: ${id}`);
     }
